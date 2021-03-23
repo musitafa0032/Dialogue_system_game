@@ -10,7 +10,11 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    background: #000;
+    background: url(./heart.jpg);
+    position: fixed;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    background-size: 100% 100%;
   
 }
 
@@ -22,12 +26,12 @@
     z-index: 0;
     border-radius: 10px;
     content: '';
-    background: linear-gradient(45deg,  #002bff, #7a00ff, #ff00c8, #ff0000, #ff7300, #ff00c8, #7a00ff, #002bff,);
+    background:linear-gradient(rgb(255,130,255),#ff00c8);
     top: -2px;
     left:-2px;
     background-size: 400%;
     opacity: 1;
-    color: #fff;
+    color: #FFFFFF;
     font-size: 2rem;
     border: none;
     outline: none;

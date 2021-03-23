@@ -1,11 +1,12 @@
 import "./styles.scss";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Machine, assign, send, State } from "xstate";
+import { Machine, assign, send, State, actions} from "xstate";
 import { useMachine, asEffect } from "@xstate/react";
 import { inspect } from "@xstate/inspect";
-import { dmMachine } from "./dmColourChanger";
+import { dmMachine } from "./dmGame";
 
+const {cancel}=actions
 
 inspect({
     url: "https://statecharts.io/inspect",
@@ -44,7 +45,8 @@ const machine = Machine<SDSContext, any, SDSEvent>({
                                 assign((_context, event) => { return { recResult: event.value } })],
                             target: '.match'
                         },
-                        RECOGNISED: 'idle'
+                        RECOGNISED: {target: 'idle', actions: cancel("maxsp")},
+                        MAXSPEECH: 'idle'
                     },
                     states: {
                         progress: {
@@ -91,20 +93,20 @@ const ReactiveButton = (props: Props): JSX.Element => {
             return (
                 <button type="button" className="glow-on-hover"
                     style={{ animation: "glowing 20s linear" }} {...props}>
-                    Listening...
+                    listen!
                 </button>
             );
         case props.state.matches({ asrtts: 'speaking' }):
             return (
                 <button type="button" className="glow-on-hover"
                     style={{ animation: "bordering 1s infinite" }} {...props}>
-                    Speaking...
+                    speak!
                 </button>
             );
         default:
             return (
                 <button type="button" className="glow-on-hover" {...props}>
-                    Click to start
+                    Welcome!
                 </button >
             );
     }
@@ -125,7 +127,7 @@ function App() {
         devTools: true,
         actions: {
             recStart: asEffect(() => {
-                console.log('Ready to receive a color command.');
+                console.log('Ready to receive your speech.');
                 listen({
                     interimResults: false,
                     continuous: true
@@ -167,7 +169,7 @@ function App() {
 /* RASA API
  *  */
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
-const rasaurl = 'https://rasa-nlu-api-00.herokuapp.com/model/parse'
+const rasaurl = 'https://finalprojectgame.herokuapp.com/model/parse'
 const nluRequest = (text: string) =>
     fetch(new Request(proxyurl + rasaurl, {
         method: 'POST',
